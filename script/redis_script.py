@@ -8,7 +8,7 @@ class Redis:
         self.columns_to_tables = ["Title", "Author", "PublicationYear", "Publisher", "ItemType", "ItemCollection"]
 
     def create_redis(self):
-        with open('../data/library-collection-inventory.csv', 'r') as csvfile:
+        with open('C:/Users/hande/OneDrive/Pulpit/ZTBD/data/library-collection-inventory.csv', 'r') as csvfile:
             csvreader = csv.DictReader(csvfile)
 
             for i, row in enumerate(csvreader, 1):
