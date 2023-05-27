@@ -39,5 +39,13 @@ class Redis:
         # Wyłącz połączenie z bazą danych Redis
         self.r.close()
 
-    def select_redis(self):
-        pass
+    def select_redis(self, author_name):
+        keys = self.r.keys()
+        titles = []
+
+        for key in keys:
+            data = self.r.hgetall(key)
+            if data['Author'] == author_name:
+                titles.append(data['Title'])
+
+        return titles
