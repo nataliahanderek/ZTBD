@@ -6,7 +6,7 @@ import pathlib
 
 class Mongo:
     def __init__(self):
-        sys.path.append(str(pathlib.Path.cwd()))
+        # sys.path.append(str(pathlib.Path.cwd()))
         # print(pathlib.Path.cwd())
 
         self.client = pymongo.MongoClient("mongodb://localhost:27017/")
@@ -15,9 +15,9 @@ class Mongo:
         self.columns_to_tables = ["Title", "Author", "PublicationYear", "Publisher", "ItemType", "ItemCollection"]
 
     def create_mongo(self):
-        data_iter = pnd.read_csv('../data/library-collection-inventory.csv', usecols=self.columns_to_tables,
-                                 iterator=True,
-                                 chunksize=10000)
+        data_iter = pnd.read_csv('C:/Users/eweli/Desktop/ztpbd/data/library-collection-inventory.csv',
+                                 usecols=self.columns_to_tables,
+                                 iterator=True)
 
         for data_chunk in data_iter:
             # drop rows with any NA values
@@ -47,6 +47,7 @@ class Mongo:
     def update_mongo(self, publication_year):
         query = {"PublicationYear": {"$lt": publication_year}}
         documents = self.collection.find(query)
+        print(documents)
 
         for doc in documents:
             title = doc["Title"]
@@ -66,5 +67,18 @@ class Mongo:
         }
 
         # Wykonaj 1000 operacji wstawiania w MongoDB
+        i = 1
         for _ in range(1000):
-            self.collection.insert_one(book_data)
+            new_book_data = {
+                'Title': '',
+                'Author': 'John Doe',
+                'PublicationYear': 2022,
+                'Publisher': 'Example Publisher',
+                'ItemType': 'Book',
+                'ItemCollection': 'Main Collection'
+            }
+            book_data2 = book_data['Title'] + str(i)
+            new_book_data['Title'] = book_data2
+            self.collection.insert_one(new_book_data)
+            i = i + 1
+
