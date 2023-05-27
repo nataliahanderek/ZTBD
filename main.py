@@ -11,8 +11,10 @@ def count_time(function):
     time = end_time - start_time
     return time
 
+
 if __name__ == '__main__':
     mongo_client = Mongo()
-    redis_client = Redis()
+    # redis_client = Redis()
 
-
+    time_select_mongo = count_time(lambda: mongo_client.select_mongo('Michael Crichton'))
+    print("Time for MONGODB: select:", time_select_mongo)
