@@ -1,0 +1,75 @@
+CREATE TABLE `authors` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `Author` mediumtext COLLATE utf8mb4_0900_bin,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=283816 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_bin;
+
+CREATE TABLE `itemcollections` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `ItemCollection` mediumtext COLLATE utf8mb4_0900_bin,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=303 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_bin;
+
+CREATE TABLE `itemtypes` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `ItemType` mediumtext COLLATE utf8mb4_0900_bin,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=81 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_bin;
+
+CREATE TABLE `publicationyears` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `PublicationYear` mediumtext COLLATE utf8mb4_0900_bin,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=20121 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_bin;
+
+CREATE TABLE `publishers` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `Publisher` longtext COLLATE utf8mb4_0900_bin,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=127444 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_bin;
+
+CREATE TABLE `titles` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `Title` mediumtext COLLATE utf8mb4_0900_bin,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=877990 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_bin;
+
+
+
+
+
+
+
+
+CREATE TABLE `books_info` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `title_id` int NOT NULL,
+  `author_id` int NOT NULL,
+  `itemcollection_id` int NOT NULL,
+  `itemtype_id` int NOT NULL,
+  `publisher_id` int NOT NULL,
+  `publicationyear_id` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `title_id` (`title_id`),
+  KEY `author_id` (`author_id`),
+  KEY `itemtype_id` (`itemtype_id`),
+  KEY `publisher_id` (`publisher_id`),
+  KEY `itemcollection_id` (`itemcollection_id`),
+  CONSTRAINT `books_info_ibfk_1` FOREIGN KEY (`title_id`) REFERENCES `titles` (`id`),
+  CONSTRAINT `books_info_ibfk_2` FOREIGN KEY (`author_id`) REFERENCES `authors` (`id`),
+  CONSTRAINT `books_info_ibfk_3` FOREIGN KEY (`itemtype_id`) REFERENCES `itemtypes` (`id`),
+  CONSTRAINT `books_info_ibfk_4` FOREIGN KEY (`publisher_id`) REFERENCES `publishers` (`id`),
+  CONSTRAINT `books_info_ibfk_5` FOREIGN KEY (`itemcollection_id`) REFERENCES `itemcollections` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=58210847 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+CREATE TABLE `dump_table` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `title_val` mediumtext COLLATE utf8mb4_0900_bin NOT NULL,
+  `author_val` varchar(400) COLLATE utf8mb4_0900_bin NOT NULL,
+  `itemcollection_val` varchar(400) COLLATE utf8mb4_0900_bin NOT NULL,
+  `itemtype_val` varchar(400) COLLATE utf8mb4_0900_bin NOT NULL,
+  `publisher_val` varchar(400) COLLATE utf8mb4_0900_bin NOT NULL,
+  `publicationyear_val` varchar(400) COLLATE utf8mb4_0900_bin NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=29884366 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_bin;
