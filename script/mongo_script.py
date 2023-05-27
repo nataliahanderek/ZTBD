@@ -54,3 +54,17 @@ class Mongo:
             new_title = f"{title} ({year})"
 
             self.collection.update_one({"_id": doc["_id"]}, {"$set": {"Title": new_title}})
+
+    def insert_mongo(self):
+        book_data = {
+            'Title': 'Przykładowa książka',
+            'Author': 'John Doe',
+            'PublicationYear': 2022,
+            'Publisher': 'Example Publisher',
+            'ItemType': 'Book',
+            'ItemCollection': 'Main Collection'
+        }
+
+        # Wykonaj 1000 operacji wstawiania w MongoDB
+        for _ in range(1000):
+            self.collection.insert_one(book_data)

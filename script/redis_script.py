@@ -68,3 +68,19 @@ class Redis:
             if year < publication_year:
                 new_title = f"{title} ({year})"
                 self.r.hset(key, 'Title', new_title)
+
+    def insert_redis(self):
+        book_data = {
+            'Title': 'Przykładowa książka',
+            'Author': 'John Doe',
+            'PublicationYear': 2022,
+            'Publisher': 'Example Publisher',
+            'ItemType': 'Book',
+            'ItemCollection': 'Main Collection'
+        }
+
+        for _ in range(1000):
+            self.r.incr('book:count')  # Zwiększ wartość licznika dla książek
+            book_id = self.r.get('book:count')  # Pobierz aktualną wartość licznika jako ID książki
+            key = f'book:{book_id.decode()}'
+            self.r.hset(key, mapping = book_data)
