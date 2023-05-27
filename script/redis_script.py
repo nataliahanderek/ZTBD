@@ -1,37 +1,43 @@
 import redis
 import csv
 
-columns_to_tables = ["Title", "Author", "PublicationYear", "Publisher", "ItemType", "ItemCollection"]
 
-def create_redis():
-    r = redis.Redis(host='localhost', port=6379, db=0)
+class Redis:
+    def __init__(self):
+        self.r = redis.Redis(host='localhost', port=6379, db=0)
+        self.columns_to_tables = ["Title", "Author", "PublicationYear", "Publisher", "ItemType", "ItemCollection"]
 
-    with open('../data/library-collection-inventory.csv', 'r') as csvfile:
-        csvreader = csv.DictReader(csvfile)
+    def create_redis(self):
+        with open('../data/library-collection-inventory.csv', 'r') as csvfile:
+            csvreader = csv.DictReader(csvfile)
 
-        for i, row in enumerate(csvreader, 1):
-            id = str(i)
-            title = row['Title']
-            author = row['Author']
-            year = row['PublicationYear']
-            publisher = row['Publisher']
-            item_type = row['ItemType']
-            item_collection = row['ItemCollection']
+            for i, row in enumerate(csvreader, 1):
+                book_id = str(i)
+                title = row['Title']
+                author = row['Author']
+                year = row['PublicationYear']
+                publisher = row['Publisher']
+                item_type = row['ItemType']
+                item_collection = row['ItemCollection']
 
-            # Tworzenie słownika z danymi
-            data = {
-                'Title': title,
-                'Author': author,
-                'PublicationYear': year,
-                'Publisher': publisher,
-                'ItemType': item_type,
-                'ItemCollection': item_collection
-            }
+                # Tworzenie słownika z danymi
+                data = {
+                    'Title': title,
+                    'Author': author,
+                    'PublicationYear': year,
+                    'Publisher': publisher,
+                    'ItemType': item_type,
+                    'ItemCollection': item_collection
+                }
 
-            # Dodawanie danych do bazy Redis
-            r.hset(id, mapping = data)
+                # Dodawanie danych do bazy Redis
+                self.r.hset(book_id, mapping=data)
 
-    print("Dane z pliku CSV zostały dodane do bazy Redis.")
+        print("Dane z pliku CSV zostały dodane do bazy Redis.")
 
+    def close_redis(self):
+        # Wyłącz połączenie z bazą danych Redis
+        self.r.close()
 
-def select_redis():
+    def select_redis(self):
+        pass

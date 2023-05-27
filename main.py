@@ -1,8 +1,7 @@
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
-
+from script.mongo_script import Mongo
+from script.redis_script import Redis
 
 if __name__ == '__main__':
-    print_hi('PyCharm')
+    mongo_client = Mongo()
+    redis_client = Redis()
 
