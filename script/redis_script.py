@@ -49,3 +49,22 @@ class Redis:
                 titles.append(data['Title'])
 
         return titles
+
+    def delete_redis(self, publication_year):
+        keys = self.r.keys()
+        for key in keys:
+            data = self.r.hgetall(key)
+            if int(data['PublicationYear']) < publication_year:
+                self.r.delete(key)
+
+    def update_redis(self, publication_year):
+        keys = self.r.keys()
+
+        for key in keys:
+            data = self.r.hgetall(key)
+            title = data.get(b'Title').decode('utf-8')
+            year = int(data.get(b'PublicationYear'))
+
+            if year < publication_year:
+                new_title = f"{title} ({year})"
+                self.r.hset(key, 'Title', new_title)

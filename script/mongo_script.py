@@ -34,9 +34,23 @@ class Mongo:
         self.client.close()
 
     def select_mongo(self, author_name):
-
         query = {'Author': author_name}
         result = self.collection.find(query)
         titles = [doc['Title'] for doc in result]
 
         return titles
+
+    def delete_mongo(self, publication_year):
+        query = {'PublicationYear': {'$lt': publication_year}}
+        result = self.collection.delete_many(query)
+
+    def update_mongo(self, publication_year):
+        query = {"PublicationYear": {"$lt": publication_year}}
+        documents = self.collection.find(query)
+
+        for doc in documents:
+            title = doc["Title"]
+            year = doc["PublicationYear"]
+            new_title = f"{title} ({year})"
+
+            self.collection.update_one({"_id": doc["_id"]}, {"$set": {"Title": new_title}})
