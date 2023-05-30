@@ -15,6 +15,7 @@ def init_connection():
             print("Database connected to")
     except Error as e:
         print("Error while connecting to MySQL", e)
+
     return conn
 
 
