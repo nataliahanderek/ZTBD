@@ -1,3 +1,5 @@
+import uuid
+
 import redis
 import csv
 
@@ -59,13 +61,15 @@ class Redis:
 
         for key in keys:
             data = self.r.hgetall(key)
-            titles.append(data[b'Title'])
+            titles.append(data[b'Title'].decode())
 
         return titles
 
+    # it is for delete data from redis DB
     def flush(self):
         self.r.flushdb()
 
+    # works
     def delete_redis(self, publication_year):
         keys = self.r.keys()
         for key in keys:
@@ -86,6 +90,7 @@ class Redis:
                 new_title = f"{title} ({year})"
                 self.r.hset(key, 'Title', new_title)
 
+    # works
     def insert_redis(self):
         book_data = {
             'Title': 'Przykładowa książka',
@@ -97,7 +102,6 @@ class Redis:
         }
 
         for _ in range(1000):
-            self.r.incr('book:count')  # Zwiększ wartość licznika dla książek
-            book_id = self.r.get('book:count')  # Pobierz aktualną wartość licznika jako ID książki
-            key = f'book:{book_id.decode()}'
-            self.r.hset(key, mapping = book_data)
+            book_id = str(uuid.uuid4())
+            key = f'book:{book_id}'
+            self.r.hset(key, mapping=book_data)

@@ -12,6 +12,7 @@ def count_time(function):
 
 
 if __name__ == '__main__':
+    # Mongo
     # mongo_client = Mongo()
     # mongo_client.create_mongo()
     # mongo_client.close_mongo()
@@ -26,21 +27,20 @@ if __name__ == '__main__':
     # a= mongo_client.select_mongo('Lyon, Sidney Elizabeth, 1846-')
     # print(a)
 
+    # Redis
     redis_client = Redis()
     # redis_client.create_redis()
     # redis_client.close_redis()
-    # redis_client.flush()
 
     # time_select_redis = count_time(lambda: redis_client.insert_redis())
     # print("Time for MONGODB: update:", time_select_redis)
-    # #
-    # #
-    # #
+
     # a = redis_client.select_redis(author_name='Kishimoto, Masashi, 1974-')
     # print("Time for MONGODB: select:", a)
 
-    #
+
     # redis_client.update_redis(publication_year='2003, c1999.')
     #
-    # a = redis_client.select_redis(author_name='Kishimoto, Masashi, 1974-')
-    # print("Time for MONGODB: select:", a)
+    redis_client.delete_redis(publication_year='2022')
+    a = redis_client.select_all_redis()
+    print("Time for MONGODB: select:", a)
