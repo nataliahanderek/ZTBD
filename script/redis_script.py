@@ -1,3 +1,4 @@
+import uuid
 import redis
 import csv
 from config import *
@@ -94,7 +95,6 @@ class Redis:
         }
 
         for _ in range(1000):
-            self.r.incr('book:count')  # Zwiększ wartość licznika dla książek
-            book_id = self.r.get('book:count')  # Pobierz aktualną wartość licznika jako ID książki
-            key = f'book:{book_id.decode()}'
+            book_id = str(uuid.uuid4())
+            key = f'book:{book_id}'
             self.r.hset(key, mapping=book_data)
