@@ -1,15 +1,15 @@
 import redis
 import csv
+from config import *
 
 
 class Redis:
     def __init__(self):
-        self.r = redis.Redis(host='localhost', port=6379, db=0)
+        self.r = redis.Redis(host=HOST, port=6379, db=0)
         self.columns_to_tables = ["Title", "Author", "PublicationYear", "Publisher", "ItemType", "ItemCollection"]
 
     def create_redis(self):
-        with open('C:/Users/eweli/Desktop/ztpbd/data/library-collection-inventory.csv', 'r',
-                  encoding='utf-8') as csvfile:
+        with open(CSV_URL, 'r', encoding='utf-8') as csvfile:
             csvreader = csv.DictReader(csvfile)
 
             for i, row in enumerate(csvreader, 1):
@@ -40,7 +40,7 @@ class Redis:
         # Wyłącz połączenie z bazą danych Redis
         self.r.close()
 
-    def select_redis(self, author_name):
+    def select(self, author_name):
         keys = self.r.keys()
         titles = []
 
@@ -51,41 +51,39 @@ class Redis:
 
         return titles
 
-    def select_all_redis(self):
+    def select_all(self):
         keys = self.r.keys()
         titles = []
 
         for key in keys:
-            print(key)
             data = self.r.hgetall(key)
-            titles.append(data[b'Title'])
+            titles.append(data[b'Title'].decode())
 
         return titles
 
-    def delete_redis(self, publication_year):
+    def delete(self, publication_year):
         keys = self.r.keys()
         for key in keys:
             data = self.r.hgetall(key)
-            if int(data[b'PublicationYear']) < publication_year:
+            if data[b'PublicationYear'].decode() == publication_year:
                 self.r.delete(key)
 
-    def update_redis(self, publication_year):
+    def update(self, publication_year):
         keys = self.r.keys()
 
         for key in keys:
             data = self.r.hgetall(key)
             title = data.get(b'Title').decode('utf-8')
-            year = int(data.get(b'PublicationYear'))
+            year = data.get(b'PublicationYear').decode()
 
-            if year < publication_year:
+            if year == publication_year:
                 new_title = f"{title} ({year})"
                 self.r.hset(key, 'Title', new_title)
 
-    def clear_redis(self):
+    def clear(self):
         self.r.flushdb()
 
-    def insert_redis(self):
-        # self.r.flushdb()
+    def insert(self):
         book_data = {
             'Title': 'Przykładowa książka',
             'Author': 'John Doe',
@@ -99,5 +97,4 @@ class Redis:
             self.r.incr('book:count')  # Zwiększ wartość licznika dla książek
             book_id = self.r.get('book:count')  # Pobierz aktualną wartość licznika jako ID książki
             key = f'book:{book_id.decode()}'
-            print(key)
             self.r.hset(key, mapping=book_data)

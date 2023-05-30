@@ -4,11 +4,13 @@ CREATE TABLE `authors` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=283816 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_bin;
 
+
 CREATE TABLE `itemcollections` (
   `id` int NOT NULL AUTO_INCREMENT,
   `ItemCollection` mediumtext COLLATE utf8mb4_0900_bin,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=303 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_bin;
+
 
 CREATE TABLE `itemtypes` (
   `id` int NOT NULL AUTO_INCREMENT,
@@ -16,11 +18,13 @@ CREATE TABLE `itemtypes` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=81 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_bin;
 
+
 CREATE TABLE `publicationyears` (
   `id` int NOT NULL AUTO_INCREMENT,
   `PublicationYear` mediumtext COLLATE utf8mb4_0900_bin,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=20121 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_bin;
+
 
 CREATE TABLE `publishers` (
   `id` int NOT NULL AUTO_INCREMENT,
@@ -28,17 +32,12 @@ CREATE TABLE `publishers` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=127444 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_bin;
 
+
 CREATE TABLE `titles` (
   `id` int NOT NULL AUTO_INCREMENT,
   `Title` mediumtext COLLATE utf8mb4_0900_bin,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=877990 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_bin;
-
-
-
-
-
-
 
 
 CREATE TABLE `books_info` (

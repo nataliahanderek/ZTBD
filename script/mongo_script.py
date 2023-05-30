@@ -1,23 +1,17 @@
 import pymongo
 import pandas as pnd
-import sys
-import pathlib
+from config import *
 
 
 class Mongo:
     def __init__(self):
-        # sys.path.append(str(pathlib.Path.cwd()))
-        # print(pathlib.Path.cwd())
-
         self.client = pymongo.MongoClient("mongodb://localhost:27017/")
         self.database = self.client["library"]
         self.collection = self.database["books"]
         self.columns_to_tables = ["Title", "Author", "PublicationYear", "Publisher", "ItemType", "ItemCollection"]
 
     def create_mongo(self):
-        data_iter = pnd.read_csv('C:/Users/eweli/Desktop/ztpbd/data/library-collection-inventory.csv',
-                                 usecols=self.columns_to_tables,
-                                 iterator=True)
+        data_iter = pnd.read_csv(CSV_URL, usecols=self.columns_to_tables, iterator=True)
 
         for data_chunk in data_iter:
             # drop rows with any NA values
@@ -33,18 +27,22 @@ class Mongo:
         # Close the MongoDB connection
         self.client.close()
 
-    def select_mongo(self, author_name):
+    def select(self, author_name):
         query = {'Author': author_name}
         result = self.collection.find(query)
         titles = [doc['Title'] for doc in result]
 
         return titles
 
-    def delete_mongo(self, publication_year):
+    def select_all(self):
+        # TODO
+        pass
+
+    def delete(self, publication_year):
         query = {'PublicationYear': {'$lt': publication_year}}
         result = self.collection.delete_many(query)
 
-    def update_mongo(self, publication_year):
+    def update(self, publication_year):
         query = {"PublicationYear": {"$lt": publication_year}}
         documents = self.collection.find(query)
         print(documents)
@@ -56,7 +54,7 @@ class Mongo:
 
             self.collection.update_one({"_id": doc["_id"]}, {"$set": {"Title": new_title}})
 
-    def insert_mongo(self):
+    def insert(self):
         book_data = {
             'Title': 'Przykładowa książka',
             'Author': 'John Doe',
