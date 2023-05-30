@@ -73,7 +73,7 @@ class Mongo:
         i = 1
         for _ in range(1000):
             new_book_data = {
-                'Title': '',
+                'Title': 'Przykładowa książka',
                 'Author': 'John Doe',
                 'PublicationYear': 2022,
                 'Publisher': 'Example Publisher',

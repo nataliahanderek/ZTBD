@@ -34,13 +34,6 @@ CREATE TABLE `titles` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=877990 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_bin;
 
-
-
-
-
-
-
-
 CREATE TABLE `books_info` (
   `id` int NOT NULL AUTO_INCREMENT,
   `title_id` int NOT NULL,
@@ -61,7 +54,6 @@ CREATE TABLE `books_info` (
   CONSTRAINT `books_info_ibfk_4` FOREIGN KEY (`publisher_id`) REFERENCES `publishers` (`id`),
   CONSTRAINT `books_info_ibfk_5` FOREIGN KEY (`itemcollection_id`) REFERENCES `itemcollections` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=58210847 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
 
 CREATE TABLE `dump_table` (
   `id` int NOT NULL AUTO_INCREMENT,

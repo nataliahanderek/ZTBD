@@ -7,7 +7,7 @@ from pathlib import Path
 
 sys.path.append(str(Path.cwd()))
 
-connection_string = 'mysql://root:password@localhost/books'
+connection_string = 'mysql://root:password@localhost:3306/books'
 engine = create_engine(connection_string, echo = True)
 
 meta = MetaData()
@@ -45,7 +45,7 @@ with Session(bind=engine) as session:
 
     #load data file, chunk by chunk
 
-    data_iter = pnd.read_csv('./data/library-collection-inventory.csv', usecols=columns, iterator=True, chunksize=10000)
+    data_iter = pnd.read_csv('C:/Users/hande/OneDrive/Pulpit/ZTBD/data/library-collection-inventory.csv', usecols=columns, iterator=True, chunksize=10000)
 
     session.execute(dump_table.delete())
     session.commit()
