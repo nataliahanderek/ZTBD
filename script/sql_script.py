@@ -139,12 +139,12 @@ class MySql:
                 statement = (
                     select(title_table.c.id, author_table.c.id, collection_table.c.id, type_table.c.id,
                            publisher_table.c.id, year_table.c.id)
-                        .select_from(dump_table).join(title_table, dump_table.c.title_val == title_table.c.Title)
-                        .join(author_table, dump_table.c.author_val == author_table.c.Author)
-                        .join(collection_table, dump_table.c.itemcollection_val == collection_table.c.ItemCollection)
-                        .join(type_table, dump_table.c.itemtype_val == type_table.c.ItemType)
-                        .join(publisher_table, dump_table.c.publisher_val == publisher_table.c.Publisher)
-                        .join(year_table, dump_table.c.publicationyear_val == year_table.c.PublicationYear)
+                    .select_from(dump_table).join(title_table, dump_table.c.title_val == title_table.c.Title)
+                    .join(author_table, dump_table.c.author_val == author_table.c.Author)
+                    .join(collection_table, dump_table.c.itemcollection_val == collection_table.c.ItemCollection)
+                    .join(type_table, dump_table.c.itemtype_val == type_table.c.ItemType)
+                    .join(publisher_table, dump_table.c.publisher_val == publisher_table.c.Publisher)
+                    .join(year_table, dump_table.c.publicationyear_val == year_table.c.PublicationYear)
                 )
 
                 insert_statement = insert(info_table).from_select(
