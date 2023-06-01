@@ -5,6 +5,7 @@ from sqlalchemy import create_engine, Table, select, MetaData, text, insert, fun
 from sqlalchemy.orm import Session
 from config_data import *
 
+
 def init_connection():
     conn = None
     try:
@@ -138,12 +139,12 @@ class MySql:
                 statement = (
                     select(title_table.c.id, author_table.c.id, collection_table.c.id, type_table.c.id,
                            publisher_table.c.id, year_table.c.id)
-                    .select_from(dump_table).join(title_table, dump_table.c.title_val == title_table.c.Title)
-                    .join(author_table, dump_table.c.author_val == author_table.c.Author)
-                    .join(collection_table, dump_table.c.itemcollection_val == collection_table.c.ItemCollection)
-                    .join(type_table, dump_table.c.itemtype_val == type_table.c.ItemType)
-                    .join(publisher_table, dump_table.c.publisher_val == publisher_table.c.Publisher)
-                    .join(year_table, dump_table.c.publicationyear_val == year_table.c.PublicationYear)
+                        .select_from(dump_table).join(title_table, dump_table.c.title_val == title_table.c.Title)
+                        .join(author_table, dump_table.c.author_val == author_table.c.Author)
+                        .join(collection_table, dump_table.c.itemcollection_val == collection_table.c.ItemCollection)
+                        .join(type_table, dump_table.c.itemtype_val == type_table.c.ItemType)
+                        .join(publisher_table, dump_table.c.publisher_val == publisher_table.c.Publisher)
+                        .join(year_table, dump_table.c.publicationyear_val == year_table.c.PublicationYear)
                 )
 
                 insert_statement = insert(info_table).from_select(
@@ -163,57 +164,56 @@ class MySql:
 
         print(f"Sesscion concluded {data_counter}")
 
-    def select_all(self):
-        # Ładowanie informacji o tabeli books_info
-        books_info = self.meta.tables['authors']
-
-        # Tworzenie zapytania SELECT ALL
-        query = select([books_info])
-
-        # Wykonanie zapytania
-        with self.engine.connect() as conn:
-            result = conn.execute(query)
-
-            # Pobieranie wyników zapytania
-            rows = result.fetchall()
-
-            # Wyświetlanie wyników
-            for row in rows:
-                print(row)
-
-
-
     def insert(self):
-        # TODO
-        pass
+        title = "Przykładowa książka"
+        author_id = 283859
+        itemcollection_id = 336
+        itemtype_id = 82
+        publisher_id = 127447
+        publicationyear_id = 20186
 
-    def update(self):
-        # TODO
-        pass
+        for _ in range(1000):
+            self.cursor.execute(
+                "INSERT INTO titles (Title) VALUES (%s)", (title,))
+            title_id = self.cursor.lastrowid
+
+            self.cursor.execute(
+                "INSERT INTO books_info (title_id, author_id, itemcollection_id, itemtype_id, publisher_id, "
+                "publicationyear_id) VALUES (%s, %s, %s, %s, %s, %s)",
+                (title_id, author_id, itemcollection_id, itemtype_id, publisher_id, publicationyear_id))
+
+            self.r.commit()
+
+    def update(self, publication_year):
+        self.cursor.execute(
+            "UPDATE titles SET Title = CONCAT(Title, (SELECT PublicationYear FROM publicationyears "
+            "WHERE PublicationYear = %s)) WHERE EXISTS (SELECT 1 FROM books_info WHERE "
+            "books_info.title_id = titles.id AND books_info.publicationyear_id = (SELECT id FROM "
+            "publicationyears WHERE PublicationYear = %s))", (publication_year, publication_year))
+        self.r.commit()
 
     def select(self, author_name):
-        print(self.meta.tables.keys())
-
-        # TODO
-        join_statement = (
-            self.meta.tables['books_info'].join(self.meta.tables['authors'],
-                                                self.meta.tables['books_info'].c.author_id == self.meta.tables[
-                                                    'authors'].c.id)
-        )
-
-        select_statement = select([self.meta.tables['books_info'].c.title_id]).where(
-            self.meta.tables['authors'].c.Author == author_name
-        ).select_from(join_statement)
-
-        result = self.engine.execute(select_statement)
-        rows = result.fetchall()
+        self.cursor.execute("SELECT * FROM BOOKS_INFO B LEFT JOIN AUTHORS A ON A.ID = B.AUTHOR_ID WHERE A.AUTHOR = %s",
+                            (author_name,))
+        rows = self.cursor.fetchall()
 
         return rows
 
     def select_all(self):
-        # TODO
-        pass
+        self.cursor.execute(
+            "SELECT * FROM BOOKS_INFO")
+        rows = self.cursor.fetchall()
 
-    def delete(self):
-        # TODO
-        pass
+        return rows
+
+    def delete(self, publication_year):
+        self.cursor.execute(
+            "DELETE FROM books_info WHERE publicationyear_id IN (SELECT id FROM publicationyears WHERE "
+            "PublicationYear = %s)",
+            (publication_year,))
+
+        self.cursor.execute(
+            "DELETE FROM titles WHERE id NOT IN (SELECT title_id FROM books_info)")
+
+        self.r.commit()
+

@@ -21,12 +21,12 @@ if __name__ == '__main__':
     # redis_client.create_redis()
 
     sql_client = MySql()
-    sql_client.create_single_tables()
-    sql_client.create_connection_table()
+    # sql_client.create_single_tables()
+    # sql_client.create_connection_table()
 
     ### MONGO ###
 
-    # time_select_mongo = count_time(lambda: mongo_client.select('Michael Crichton'))
+    # time_select_mongo = count_time(lambda: mongo_client.select('London, Julia'))
     # print("Time for MONGODB: select:", time_select_mongo)
     #
     # time_insert_mongo = count_time(lambda: mongo_client.insert())
@@ -42,7 +42,7 @@ if __name__ == '__main__':
 
     # redis_client.clear_redis()
 
-    # time_select_redis = count_time(lambda: redis_client.select('John Doe'))
+    # time_select_redis = count_time(lambda: redis_client.select('London, Julia'))
     # print("Time for REDIS: select:", time_select_redis)
     #
     # time_select_all_redis = count_time(lambda: redis_client.select_all())
@@ -60,6 +60,14 @@ if __name__ == '__main__':
 
     ### MYSQL ###
 
-    # TODO
-    # sql_client.select_all()
-    # print(a)
+    # time_select_sql = count_time(lambda: sql_client.select('London, Julia'))
+    # print("Time for SQL: select:", time_select_sql)
+
+    # time_insert_sql = count_time(lambda: sql_client.insert())
+    # print("Time for SQL: insert:", time_insert_sql)
+
+    # time_update_sql = count_time(lambda: sql_client.update('[2012].'))
+    # print("Time for SQL: select:", time_update_sql)
+
+    # time_delete_sql = count_time(lambda: sql_client.delete('[2012].'))
+    # print("Time for SQL: select:", time_delete_sql)
