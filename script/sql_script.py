@@ -3,7 +3,7 @@ from mysql.connector import Error
 import pandas as pnd
 from sqlalchemy import create_engine, Table, select, MetaData, text, insert, func
 from sqlalchemy.orm import Session
-from config import *
+from config_data import *
 
 
 def init_connection():
@@ -173,12 +173,15 @@ class MySql:
         pass
 
     def select(self):
+        print(self.meta.tables.keys())
         # TODO
         pass
 
     def select_all(self):
-        # TODO
-        pass
+        self.cursor.execute("SELECT * FROM authors")
+        rows = self.cursor.fetchall()
+        for row in rows:
+            print(row)
 
     def delete(self):
         # TODO

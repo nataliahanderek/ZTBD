@@ -60,4 +60,5 @@ if __name__ == '__main__':
 
     ### MYSQL ###
 
+    sql_client.select_all()
     # TODO

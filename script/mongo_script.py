@@ -1,6 +1,6 @@
 import pymongo
 import pandas as pnd
-from config import *
+from config_data import *
 
 
 class Mongo:
@@ -54,7 +54,7 @@ class Mongo:
 
             self.collection.update_one({"_id": doc["_id"]}, {"$set": {"Title": new_title}})
 
-    def insert(self):
+    def insert(self, n):
         book_data = {
             'Title': 'Przykładowa książka',
             'Author': 'John Doe',
@@ -66,7 +66,7 @@ class Mongo:
 
         # Wykonaj 1000 operacji wstawiania w MongoDB
         i = 1
-        for _ in range(1000):
+        for _ in range(n):
             new_book_data = {
                 'Title': '',
                 'Author': 'John Doe',

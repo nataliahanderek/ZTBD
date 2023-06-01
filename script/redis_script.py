@@ -1,7 +1,7 @@
 import uuid
 import redis
 import csv
-from config import *
+from config_data import *
 
 
 class Redis:
@@ -84,7 +84,7 @@ class Redis:
     def clear(self):
         self.r.flushdb()
 
-    def insert(self):
+    def insert(self, n):
         book_data = {
             'Title': 'Przykładowa książka',
             'Author': 'John Doe',
@@ -94,7 +94,7 @@ class Redis:
             'ItemCollection': 'Main Collection'
         }
 
-        for _ in range(1000):
+        for _ in range(n):
             book_id = str(uuid.uuid4())
             key = f'book:{book_id}'
             self.r.hset(key, mapping=book_data)
