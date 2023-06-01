@@ -57,9 +57,8 @@ class Gui:
         # insert Label and Input
         self.label_insert = tk.Label(self.root, text="Podaj ile rekordów chcesz dodać:", width=50)
         self.label_insert.pack()
-        self.entry_insert = tk.Entry(self.root, width=50, relief=tk.SOLID, borderwidth=1)
+        self.entry_insert = tk.Entry(self.root, width=50)
         self.entry_insert.pack()
-        self.entry_insert.configure(highlightbackground="blue")
 
         # create insert button
         self.insert_button = ttk.Button(self.root,
@@ -76,9 +75,8 @@ class Gui:
         # delete Label and Input
         self.label_delete = tk.Label(self.root, text="Podaj z jakiego roku chcesz usunąć rekordy:", width=50)
         self.label_delete.pack()
-        self.entry_delete = tk.Entry(self.root, width=50, relief=tk.SOLID, borderwidth=1)
+        self.entry_delete = tk.Entry(self.root, width=50)
         self.entry_delete.pack()
-        self.entry_delete.configure(highlightbackground="blue")
 
         # create delete button
         self.delete_button = ttk.Button(self.root,
@@ -96,9 +94,8 @@ class Gui:
         # select Label and Input
         self.label_select = tk.Label(self.root, text="Podaj jakiego autora książki szukasz:")
         self.label_select.pack()
-        self.entry_select = tk.Entry(self.root, width=50, relief=tk.SOLID, borderwidth=1)
+        self.entry_select = tk.Entry(self.root, width=50)
         self.entry_select.pack()
-        self.entry_select.configure(highlightbackground="blue")
 
         # create select button
         self.select_button = ttk.Button(self.root,
@@ -116,9 +113,8 @@ class Gui:
         # update Label and Input
         self.label_update = tk.Label(self.root, text="Podaj dla jakiego roku chcesz zrobić update:")
         self.label_update.pack()
-        self.entry_update = tk.Entry(self.root, width=50, relief=tk.SOLID, borderwidth=1)
+        self.entry_update = tk.Entry(self.root, width=50)
         self.entry_update.pack()
-        self.entry_update.configure(highlightbackground="blue")
 
         # create update button
         self.update_button = ttk.Button(self.root,
@@ -132,10 +128,16 @@ class Gui:
         self.spacer = ttk.Label(self.root, text="\n\n")
         self.spacer.pack()
 
+        self.style = ttk.Style()
+        self.style.configure("Custom.Treeview", font=("Arial", 8))
+
         # Tworzenie tablicy
-        self.table = ttk.Treeview(self.root, columns=("Time"))
+        self.table = ttk.Treeview(self.root, columns=("Time"), style="Custom.Treeview")
         self.table.heading("#0", text="Database")
         self.table.heading("Time", text="Time (ms)")
+        self.table.configure(height=3)
+        self.table.tag_configure("oddrow", background="#E8E8E8")
+        self.table.tag_configure("evenrow", background="white")
         self.table.pack()
 
     def save_config(self):
@@ -179,9 +181,9 @@ class Gui:
     def create_table(self, time_mongo, time_redis, time_sql):
         self.table.delete(*self.table.get_children())
 
-        self.table.insert("", "end", text="MongoDB", values=(time_mongo))
-        self.table.insert("", "end", text="Redis", values=(time_redis))
-        self.table.insert("", "end", text="SQL", values=(time_sql))
+        self.table.insert("", "end", text="MongoDB", values=(time_mongo), tags=("oddrow",))
+        self.table.insert("", "end", text="Redis", values=(time_redis), tags=("evenrow",))
+        self.table.insert("", "end", text="SQL", values=(time_sql), tags=("oddrow",))
 
 
 gui = Gui()
