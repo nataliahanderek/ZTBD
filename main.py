@@ -60,8 +60,8 @@ if __name__ == '__main__':
 
     ### MYSQL ###
 
-    # time_select_sql = count_time(lambda: sql_client.select('London, Julia'))
-    # print("Time for SQL: select:", time_select_sql)
+    time_select_sql = count_time(lambda: sql_client.select('London, Julia'))
+    print("Time for SQL: select:", time_select_sql)
 
     # time_insert_sql = count_time(lambda: sql_client.insert())
     # print("Time for SQL: insert:", time_insert_sql)

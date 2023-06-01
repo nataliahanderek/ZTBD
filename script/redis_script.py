@@ -87,7 +87,7 @@ class Redis:
     def insert(self, n):
         book_data = {
             'Title': 'Przykładowa książka',
-            'Author': 'John Doe',
+            'Author': 'London, Julia',
             'PublicationYear': '2022',
             'Publisher': 'Example Publisher',
             'ItemType': 'Book',

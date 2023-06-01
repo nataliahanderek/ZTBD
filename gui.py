@@ -85,7 +85,7 @@ class Gui:
                                         text="Delete",
                                         width=50,
                                         style="CustomButton.TButton",
-                                        command=lambda: self.insert_strategy(int(self.entry_delete.get())))
+                                        command=lambda: self.delete_strategy(int(self.entry_delete.get())))
         self.delete_button.configure(width=50)
         self.delete_button.pack()
 
@@ -105,7 +105,7 @@ class Gui:
                                         text="Select",
                                         width=50,
                                         style="CustomButton.TButton",
-                                        command=lambda: self.insert_strategy(int(self.entry_select.get())))
+                                        command=lambda: self.select_strategy(self.entry_select.get()))
         self.select_button.configure(width=50)
         self.select_button.pack()
 
@@ -145,7 +145,7 @@ class Gui:
         # modyfikujemy wszystkie rekordy które były w roku: data (String)
         self.time_update_mongo = count_time(lambda: self.mongo_client.update(year))
         self.time_update_redis = count_time(lambda: self.redis_client.update(year))
-        self.time_update_sql = 0
+        self.time_update_sql = count_time(lambda: self.sql_client.update(year))
 
         self.create_table(self.time_update_mongo, self.time_update_redis, self.time_update_sql)
 
@@ -153,7 +153,7 @@ class Gui:
         # usuwamy wszystkie rekordy które były w roku: data (String)
         self.time_delete_mongo = count_time(lambda: self.mongo_client.delete(year))
         self.time_delete_redis = count_time(lambda: self.redis_client.delete(year))
-        self.time_delete_sql = 0
+        self.time_delete_sql = count_time(lambda: self.sql_client.delete(year))
 
         self.create_table(self.time_delete_mongo, self.time_delete_redis, self.time_delete_sql)
 
@@ -161,7 +161,7 @@ class Gui:
         # dodajemy przykładowych n rekordów do baz
         self.time_insert_mongo = count_time(lambda: self.mongo_client.insert(n))
         self.time_insert_redis = count_time(lambda: self.redis_client.insert(n))
-        self.time_insert_sql = 0
+        self.time_insert_sql = count_time(lambda: self.sql_client.insert(n))
 
         self.create_table(self.time_insert_mongo, self.time_insert_redis, self.time_insert_sql)
 
@@ -169,7 +169,7 @@ class Gui:
         # szykamy książek napisanych przez autorów: author
         self.time_select_mongo = count_time(lambda: self.mongo_client.select(author))
         self.time_select_redis = count_time(lambda: self.redis_client.select(author))
-        self.time_select_sql = 0
+        self.time_select_sql = count_time(lambda: self.sql_client.select(author))
 
         self.create_table(self.time_select_mongo, self.time_select_redis, self.time_select_sql)
 
