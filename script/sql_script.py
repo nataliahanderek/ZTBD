@@ -3,8 +3,7 @@ from mysql.connector import Error
 import pandas as pnd
 from sqlalchemy import create_engine, Table, select, MetaData, text, insert, func
 from sqlalchemy.orm import Session
-from config import *
-
+from config_data import *
 
 def init_connection():
     conn = None
@@ -164,6 +163,26 @@ class MySql:
 
         print(f"Sesscion concluded {data_counter}")
 
+    def select_all(self):
+        # Ładowanie informacji o tabeli books_info
+        books_info = self.meta.tables['authors']
+
+        # Tworzenie zapytania SELECT ALL
+        query = select([books_info])
+
+        # Wykonanie zapytania
+        with self.engine.connect() as conn:
+            result = conn.execute(query)
+
+            # Pobieranie wyników zapytania
+            rows = result.fetchall()
+
+            # Wyświetlanie wyników
+            for row in rows:
+                print(row)
+
+
+
     def insert(self):
         # TODO
         pass
@@ -172,9 +191,24 @@ class MySql:
         # TODO
         pass
 
-    def select(self):
+    def select(self, author_name):
+        print(self.meta.tables.keys())
+
         # TODO
-        pass
+        join_statement = (
+            self.meta.tables['books_info'].join(self.meta.tables['authors'],
+                                                self.meta.tables['books_info'].c.author_id == self.meta.tables[
+                                                    'authors'].c.id)
+        )
+
+        select_statement = select([self.meta.tables['books_info'].c.title_id]).where(
+            self.meta.tables['authors'].c.Author == author_name
+        ).select_from(join_statement)
+
+        result = self.engine.execute(select_statement)
+        rows = result.fetchall()
+
+        return rows
 
     def select_all(self):
         # TODO

@@ -1,7 +1,7 @@
 import uuid
 import redis
 import csv
-from config import *
+from config_data import *
 
 
 class Redis:

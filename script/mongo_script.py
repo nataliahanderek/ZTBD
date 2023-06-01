@@ -1,6 +1,6 @@
 import pymongo
 import pandas as pnd
-from config import *
+from config_data import *
 
 
 class Mongo:
