@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
 import matplotlib.pyplot as plt
+import numpy as np
 
 from main import count_time
 from script.mongo_script import Mongo
@@ -140,6 +141,18 @@ class Gui:
         self.table.tag_configure("evenrow", background="white")
         self.table.pack()
 
+        # Spacer
+        self.spacer = ttk.Label(self.root, text="\n")
+        self.spacer.pack()
+
+        # create update button
+        self.generate_stats_button = ttk.Button(self.root,
+                                                text="Generate statistic",
+                                                style="CustomButton.TButton",
+                                                command=lambda: self.generate_stats())
+        self.generate_stats_button.configure(width=50)
+        self.generate_stats_button.pack()
+
     def save_config(self):
         self.clean_gui()
 
@@ -184,6 +197,73 @@ class Gui:
         self.table.insert("", "end", text="MongoDB", values=(time_mongo), tags=("oddrow",))
         self.table.insert("", "end", text="Redis", values=(time_redis), tags=("evenrow",))
         self.table.insert("", "end", text="SQL", values=(time_sql), tags=("oddrow",))
+
+    def get_times_for_stats(self):
+        times = [[50, 20,15,32,11], [52, 21,50, 20,15], [50, 20,15,33, 21]]
+
+        # times[0].append(count_time(lambda: self.mongo_client.select('London, Julia')))
+        # times[0].append(count_time(lambda: self.mongo_client.select_all()))
+        # times[0].append(count_time(lambda: self.mongo_client.))
+        # times[0].append(count_time(lambda: self.mongo_client.))
+        # times[0].append(count_time(lambda: self.mongo_client.))
+
+        # times[1].append(count_time(lambda: self.redis_client.select('London, Julia')))
+        # times[1].append(count_time(lambda: self.redis_client.select_all()))
+        # times[1].append(count_time(lambda: self.redis_client.))
+        # times[1].append(count_time(lambda: self.redis_client.))
+        # times[1].append(count_time(lambda: self.redis_client.))
+
+        # times[2].append(count_time(lambda: self.sql_client.select('London, Julia')))
+        # times[2].append(count_time(lambda: self.sql_client.select_all()))
+        # times[2].append(count_time(lambda: self.sql_client.))
+        # times[2].append(count_time(lambda: self.sql_client.))
+        # times[2].append(count_time(lambda: self.sql_client.))
+
+        return times
+
+    def generate_stats(self):
+        queries = ['Query 1', 'Query 2', 'Query 3', 'Query 4', 'Query 5']
+        data_bases = ['MongoDB', 'Redis', 'SQL']
+        times = self.get_times_for_stats()
+
+        mongo_color = '#9EE493'
+        mysql_color = (0.584, 0.745, 0.812)
+        redis_color = '#F39B93'
+
+        mongo_values = times[0]
+        redis_values = times[1]
+        sql_values = times[2]
+
+        plt.figure(figsize=(8, 8))
+
+        width = 0.2
+        offset = 0.2
+        bottom_margin = 0.40
+
+        plt.subplots_adjust(bottom=bottom_margin)
+
+        x = np.arange(len(queries))
+
+        # Generowanie słupków dla każdej bazy danych
+        plt.bar(x - offset, mongo_values, width=width, label='MongoDB', color=mongo_color)
+        plt.bar(x, redis_values, width=width, label='Redis', color=redis_color)
+        plt.bar(x + offset, sql_values, width=width, label='SQL', color=mysql_color)
+
+        plt.xlabel('Queries')
+        plt.ylabel('Time [s]')
+        plt.title('Execution time of queries for databases')
+        plt.xticks([j + (len(data_bases) - 1) * offset / 2 for j in range(len(queries))], queries)  # Etykiety osi X
+        plt.legend()
+
+        # Dodanie tekstu pod wykresem
+        plt.text(0, -0.20, 'Legend:', transform=plt.gca().transAxes, ha='left', fontsize=12)
+        plt.text(0, -0.30, 'Query 1: Select all', transform=plt.gca().transAxes, ha='left', fontsize=10)
+        plt.text(0, -0.40, 'Query 2: Select authors', transform=plt.gca().transAxes, ha='left', fontsize=10)
+        plt.text(0, -0.50, 'Query 3: Count books by publisher', transform=plt.gca().transAxes, ha='left', fontsize=10)
+        plt.text(0, -0.60, 'Query 4: Count words in titles', transform=plt.gca().transAxes, ha='left', fontsize=10)
+        plt.text(0, -0.70, 'Query 5: Count avg publisher books', transform=plt.gca().transAxes, ha='left', fontsize=10)
+
+        plt.show()
 
 
 gui = Gui()
