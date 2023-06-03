@@ -164,6 +164,10 @@ class MySql:
 
         print(f"Sesscion concluded {data_counter}")
 
+    def close_sql(self):
+        # Wyłącz połączenie z bazą danych Redis
+        self.r.close()
+
     def insert(self, n):
         title = "Przykładowa książka"
         author_id = 283820
@@ -194,14 +198,15 @@ class MySql:
 
     def select(self, author_name):
         self.cursor.execute(
-            "SELECT * FROM BOOKS_INFO B "
-            "LEFT JOIN AUTHORS A ON A.ID = B.AUTHOR_ID "
-            "LEFT JOIN TITLES T ON T.ID = B.TITLE_ID "
-            "LEFT JOIN ITEMCOLLECTIONS IC ON IC.ID = B.ITEMCOLLECTION_ID "
-            "LEFT JOIN ITEMTYPES IT ON IT.ID = B.ITEMTYPE_ID "
-            "LEFT JOIN PUBLISHERS P ON P.ID = B.PUBLISHER_ID "
-            "LEFT JOIN PUBLICATIONYEARS PY ON PY.ID = B.PUBLICATIONYEAR_ID "
-            "WHERE A.AUTHOR = %s",
+            " SELECT T.TITLE, A.AUTHOR, IC.ITEMCOLLECTION, IT.ITEMTYPE, P.PUBLISHER, PY.PUBLICATIONYEAR "
+            " FROM BOOKS_INFO B "
+            " LEFT JOIN AUTHORS A ON A.ID = B.AUTHOR_ID "
+            " LEFT JOIN TITLES T ON T.ID = B.TITLE_ID "
+            " LEFT JOIN ITEMCOLLECTIONS IC ON IC.ID = B.ITEMCOLLECTION_ID "
+            " LEFT JOIN ITEMTYPES IT ON IT.ID = B.ITEMTYPE_ID "
+            " LEFT JOIN PUBLISHERS P ON P.ID = B.PUBLISHER_ID "
+            " LEFT JOIN PUBLICATIONYEARS PY ON PY.ID = B.PUBLICATIONYEAR_ID "
+            " WHERE A.AUTHOR = %s",
             (author_name,))
         rows = self.cursor.fetchall()
 
@@ -209,7 +214,15 @@ class MySql:
 
     def select_all(self):
         self.cursor.execute(
-            "SELECT * FROM BOOKS_INFO")
+            " SELECT T.TITLE, A.AUTHOR, IC.ITEMCOLLECTION, IT.ITEMTYPE, P.PUBLISHER, PY.PUBLICATIONYEAR "
+            " FROM BOOKS_INFO B "
+            " LEFT JOIN AUTHORS A ON A.ID = B.AUTHOR_ID "
+            " LEFT JOIN TITLES T ON T.ID = B.TITLE_ID "
+            " LEFT JOIN ITEMCOLLECTIONS IC ON IC.ID = B.ITEMCOLLECTION_ID "
+            " LEFT JOIN ITEMTYPES IT ON IT.ID = B.ITEMTYPE_ID "
+            " LEFT JOIN PUBLISHERS P ON P.ID = B.PUBLISHER_ID "
+            " LEFT JOIN PUBLICATIONYEARS PY ON PY.ID = B.PUBLICATIONYEAR_ID "
+        )
         rows = self.cursor.fetchall()
 
         return rows
@@ -224,3 +237,35 @@ class MySql:
             "DELETE FROM titles WHERE id NOT IN (SELECT title_id FROM books_info)")
 
         self.r.commit()
+
+    def select_authors(self):
+        self.cursor.execute(
+            " SELECT DISTINCT AUTHOR FROM AUTHORS "
+        )
+        rows = self.cursor.fetchall()
+
+        return rows
+
+    def count_books_by_publisher(self):
+        self.cursor.execute(
+            " SELECT P.Publisher, COUNT(*) AS BooksCount "
+            " FROM PUBLISHERS P "
+            " JOIN BOOKS_INFO B ON B.PUBLISHER_ID = P.ID "
+            " GROUP BY P.Publisher "
+        )
+        rows = self.cursor.fetchall()
+
+        return rows
+
+    def count_words_in_titles(self):
+        search_word = 'for'
+
+        self.cursor.execute(
+            " SELECT "
+            " CONVERT(SUM((LENGTH(TITLE) - LENGTH(REPLACE(TITLE, %s, ''))) / LENGTH(%s)), INT) AS COUNT_WORD "
+            " FROM TITLES",
+            (search_word, search_word,)
+        )
+        row = self.cursor.fetchone()
+
+        return row[0]

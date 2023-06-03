@@ -27,33 +27,6 @@ class Mongo:
         # Close the MongoDB connection
         self.client.close()
 
-    def select(self, author_name):
-        query = {'Author': author_name}
-        result = self.collection.find(query)
-        titles = [doc['Title'] for doc in result]
-
-        return titles
-
-    def select_all(self):
-        # TODO
-        pass
-
-    def delete(self, publication_year):
-        query = {'PublicationYear': {'$lt': publication_year}}
-        result = self.collection.delete_many(query)
-
-    def update(self, publication_year):
-        query = {"PublicationYear": {"$lt": publication_year}}
-        documents = self.collection.find(query)
-        print(documents)
-
-        for doc in documents:
-            title = doc["Title"]
-            year = doc["PublicationYear"]
-            new_title = f"{title} ({year})"
-
-            self.collection.update_one({"_id": doc["_id"]}, {"$set": {"Title": new_title}})
-
     def insert(self, n):
         book_data = {
             'Title': 'Przykładowa książka',
@@ -64,7 +37,6 @@ class Mongo:
             'ItemCollection': 'Main Collection'
         }
 
-        # Wykonaj 1000 operacji wstawiania w MongoDB
         i = 1
         for _ in range(n):
             new_book_data = {
@@ -79,4 +51,62 @@ class Mongo:
             new_book_data['Title'] = book_data2
             self.collection.insert_one(new_book_data)
             i = i + 1
+
+    def update(self, publication_year):
+        query = {"PublicationYear": {"$lt": publication_year}}
+        documents = self.collection.find(query)
+        print(documents)
+
+        for doc in documents:
+            title = doc["Title"]
+            year = doc["PublicationYear"]
+            new_title = f"{title} ({year})"
+
+            self.collection.update_one({"_id": doc["_id"]}, {"$set": {"Title": new_title}})
+
+    def select(self, author_name):
+        query = {'Author': author_name}
+        result = self.collection.find(query)
+        documents = [doc for doc in result]
+
+        return documents
+
+    def select_all(self):
+        result = self.collection.find()
+        documents = [doc for doc in result]
+
+        return documents
+
+    def delete(self, publication_year):
+        query = {'PublicationYear': {'$lt': publication_year}}
+        self.collection.delete_many(query)
+
+    def select_authors(self):
+        authors = self.collection.distinct('Author')
+
+        return authors
+
+    def count_books_by_publisher(self):
+        pipeline = [
+            {"$group": {"_id": "$Publisher", "count": {"$sum": 1}}}
+        ]
+        result = self.collection.aggregate(pipeline)
+        counts = {doc["_id"]: doc["count"] for doc in result}
+        return counts
+
+    def count_words_in_titles(self):
+        search_word = "for"
+        pipeline = [
+            {"$match": {"Title": {"$regex": search_word}}},
+            {"$project": {"_id": 0,
+                          "count": {"$regexMatch": {"input": "$Title", "regex": search_word, "options": "i"}}}},
+            {"$group": {"_id": None, "total_count": {"$sum": {"$cond": [{"$eq": ["$count", True]}, 1, 0]}}}}
+        ]
+        result = list(self.collection.aggregate(pipeline))
+        if result:
+            count = result[0]['total_count']
+        else:
+            count = 0
+
+        return count
 
