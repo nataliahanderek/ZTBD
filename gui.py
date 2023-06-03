@@ -207,18 +207,21 @@ class Gui:
         times[0].append(count_time(lambda: self.mongo_client.select_authors()))
         times[0].append(count_time(lambda: self.mongo_client.count_books_by_publisher()))
         times[0].append(count_time(lambda: self.mongo_client.count_words_in_titles()))
+        times[0].append(count_time(lambda: self.mongo_client.count_avg_publisher_books()))
         times[0].append(count_time(lambda: self.mongo_client.count_median_for_books_by_publisher()))
 
         times[1].append(count_time(lambda: self.redis_client.select_all()))
         times[1].append(count_time(lambda: self.redis_client.select_authors()))
         times[1].append(count_time(lambda: self.redis_client.count_books_by_publisher_redis()))
         times[1].append(count_time(lambda: self.redis_client.count_words_in_titles()))
+        times[1].append(count_time(lambda: self.redis_client.count_avg_publisher_books()))
         times[1].append(count_time(lambda: self.redis_client.count_median_for_books_by_publisher()))
 
         times[2].append(count_time(lambda: self.sql_client.select_all()))
         times[2].append(count_time(lambda: self.sql_client.select_authors()))
         times[2].append(count_time(lambda: self.sql_client.count_books_by_publisher()))
         times[2].append(count_time(lambda: self.sql_client.count_words_in_titles()))
+        times[2].append(count_time(lambda: self.sql_client.count_avg_publisher_books()))
         times[2].append(count_time(lambda: self.sql_client.count_median_for_books_by_publisher()))
 
         return times
