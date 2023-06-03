@@ -262,10 +262,39 @@ class MySql:
 
         self.cursor.execute(
             " SELECT "
-            " CONVERT(SUM((LENGTH(TITLE) - LENGTH(REPLACE(TITLE, %s, ''))) / LENGTH(%s)), INT) AS COUNT_WORD "
+            " SUM((LENGTH(TITLE) - LENGTH(REPLACE(TITLE, %s, ''))) / LENGTH(%s)) AS COUNT_WORD "
             " FROM TITLES",
             (search_word, search_word,)
         )
         row = self.cursor.fetchone()
 
         return row[0]
+
+    def count_avg_publisher_books(self):
+        self.cursor.execute(
+            " SELECT COUNT(B.ID) / COUNT(DISTINCT P.ID) AS AVERAGEPUBLISHERBOOKS "
+            " FROM PUBLISHERS P "
+            " JOIN BOOKS_INFO B ON B.PUBLISHER_ID = P.ID "
+        )
+        row = self.cursor.fetchone()
+
+        return row[0]
+
+    def count_median_for_books_by_publisher(self):
+        self.cursor.execute(
+            " SELECT AVG(BOOKSCOUNT) AS AVERAGEPUBLISHERBOOKS "
+            " FROM ( "
+            " SELECT COUNT(B.ID) AS BOOKSCOUNT, "
+            " ROW_NUMBER() OVER (ORDER BY COUNT(B.ID)) AS ROWNUM, "
+            " COUNT(B.ID) AS TOTALCOUNT "
+            " FROM PUBLISHERS P "
+            " JOIN BOOKS_INFO B ON B.PUBLISHER_ID = P.ID "
+            " GROUP BY P.PUBLISHER "
+            " ) AS SUBQUERY "
+            " WHERE ROWNUM IN ((TOTALCOUNT + 1) / 2, (TOTALCOUNT + 2) / 2) "
+        )
+
+        row = self.cursor.fetchone()
+
+        return row[0]
+

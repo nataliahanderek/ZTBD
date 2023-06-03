@@ -1,3 +1,4 @@
+import statistics
 import uuid
 import redis
 import csv
@@ -139,4 +140,41 @@ class Redis:
 
         return count
 
+    def count_avg_publisher_books(self):
+        keys = self.r.keys()
+        publishers = set()
+
+        for key in keys:
+            data = self.r.hgetall(key)
+            publisher = data[b'Publisher'].decode()
+            publishers.add(publisher)
+
+        publishers = len(publishers)
+        total_books = self.r.dbsize()
+
+        if publishers > 0:
+            average = total_books / publishers
+        else:
+            average = 0
+
+        return average
+
+    def count_median_for_books_by_publisher(self):
+        keys = self.r.keys()
+        counts = {}
+
+        for key in keys:
+            data = self.r.hgetall(key)
+            publisher = data[b'Publisher'].decode()
+
+            if publisher in counts:
+                counts[publisher] += 1
+            else:
+                counts[publisher] = 1
+
+        sorted_counts = sorted(counts.items(), key=lambda x: x[1])
+        books_counts = [count for publisher, count in sorted_counts]
+        median = statistics.median(books_counts)
+
+        return median
 

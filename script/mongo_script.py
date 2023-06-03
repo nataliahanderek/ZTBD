@@ -1,3 +1,5 @@
+import statistics
+
 import pymongo
 import pandas as pnd
 from config_data import *
@@ -109,4 +111,32 @@ class Mongo:
             count = 0
 
         return count
+
+    def count_avg_publisher_books(self):
+        pipeline = [
+            {"$group": {"_id": "$Publisher", "count": {"$sum": 1}}},
+            {'$group': {'_id': None, 'averageBooks': {'$avg': '$count'}}}
+        ]
+
+        result = self.collection.aggregate(pipeline)
+        average_books = next(result)['averageBooks']
+
+        return average_books
+
+    def count_median_for_books_by_publisher(self):
+        pipeline = [
+            {"$group": {"_id": "$Publisher", "count": {"$sum": 1}}},
+            {"$sort": {"count": 1}},
+            {"$group": {"_id": None, "counts": {"$push": "$count"}}},
+            {"$project": {
+                "median": {"$avg": {"$slice": ["$counts", {"$trunc": {"$divide": [{"$size": "$counts"}, 2]}}]}}}}
+        ]
+
+        result = self.collection.aggregate(pipeline)
+        median = next(result, {}).get("median")
+
+        return median
+
+
+
 
