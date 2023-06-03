@@ -149,7 +149,7 @@ class Gui:
 
         # create update button
         self.generate_stats_button = ttk.Button(self.root,
-                                                text="Generate statistic",
+                                                text="Generate statistics",
                                                 style="CustomButton.TButton",
                                                 command=lambda: self.generate_stats())
         self.generate_stats_button.configure(width=50)
