@@ -15,16 +15,17 @@ def count_time(function):
 
 
 if __name__ == '__main__':
-    mongo_client = Mongo()
+    # mongo_client = Mongo()
     # mongo_client.create_mongo()
+    # mongo_client.close_mongo()
 
-    redis_client = Redis()
+    # redis_client = Redis()
     # redis_client.create_redis()
 
     sql_client = MySql()
     # sql_client.create_single_tables()
     # sql_client.create_connection_table()
-    print(mongo_client.count_median_for_books_by_publisher())
+
     ### MONGO ###
 
     # time_select_mongo = count_time(lambda: mongo_client.select('London, Julia'))
@@ -51,6 +52,7 @@ if __name__ == '__main__':
     #
 
     # time_select_all_redis = count_time(lambda: redis_client.select("London, Julia"))
+    # print(redis_client.count_avg_publisher_books())
     # print(redis_client.select("London, Julia"))
     # print("Time for REDIS: select all:", time_select_all_redis)
     #

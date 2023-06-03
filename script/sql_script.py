@@ -110,7 +110,13 @@ class MySql:
 
             session.commit()
 
+            counter = 0
+
             for data_chunk in data_iter:
+
+                if counter > 1000000:
+                    break
+
                 # drop NA rows and rename the columns for convenience
                 data = data_chunk.dropna()
 
@@ -152,15 +158,20 @@ class MySql:
                     statement
                 )
 
-                print(insert_statement)
-
                 # insert into out final info_table the indexes. This is now a many-to-many table with full information
                 session.execute(insert_statement)
                 session.commit()
 
                 # empty the dump_table and repeat for the next data chunk
                 session.execute(dump_table.delete())
+
+                counter += len(data_chunk)
+                print(counter)
+
                 session.commit()
+
+
+
 
         print(f"Sesscion concluded {data_counter}")
 
