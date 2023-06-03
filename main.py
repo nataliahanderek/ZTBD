@@ -9,8 +9,9 @@ def count_time(function):
     function()
     end_time = datetime.now()
 
-    time = end_time - start_time
-    return time
+    time_delta = end_time - start_time
+    execution_time = time_delta.total_seconds()
+    return execution_time
 
 
 if __name__ == '__main__':
@@ -43,7 +44,7 @@ if __name__ == '__main__':
 
     ### REDIS ###
 
-    # redis_client.clear_redis()
+    # redis_client.clear()
 
     # time_select_redis = count_time(lambda: redis_client.select('London, Julia'))
     # print("Time for REDIS: select:", time_select_redis)
