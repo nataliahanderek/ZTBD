@@ -170,11 +170,11 @@ class MySql:
 
     def insert(self, n):
         title = "Przykładowa książka"
-        author_id = 283820
-        itemcollection_id = 336
-        itemtype_id = 82
-        publisher_id = 127447
-        publicationyear_id = 20186
+        author_id = 5
+        itemcollection_id = 26
+        itemtype_id = 6
+        publisher_id = 102
+        publicationyear_id = 60
 
         for _ in range(n):
             self.cursor.execute(
