@@ -207,30 +207,24 @@ class Gui:
         times[0].append(count_time(lambda: self.mongo_client.select_authors()))
         times[0].append(count_time(lambda: self.mongo_client.count_books_by_publisher()))
         times[0].append(count_time(lambda: self.mongo_client.count_words_in_titles()))
-        print(times[0])
-        times[0].append(0)
-        # times[0].append(count_time(lambda: self.mongo_client.))
+        times[0].append(count_time(lambda: self.mongo_client.count_median_for_books_by_publisher()))
 
         times[1].append(count_time(lambda: self.redis_client.select_all()))
         times[1].append(count_time(lambda: self.redis_client.select_authors()))
         times[1].append(count_time(lambda: self.redis_client.count_books_by_publisher_redis()))
         times[1].append(count_time(lambda: self.redis_client.count_words_in_titles()))
-        print(times[1])
-        times[1].append(0)
-        # times[1].append(count_time(lambda: self.redis_client.))
+        times[1].append(count_time(lambda: self.redis_client.count_median_for_books_by_publisher()))
 
         times[2].append(count_time(lambda: self.sql_client.select_all()))
         times[2].append(count_time(lambda: self.sql_client.select_authors()))
         times[2].append(count_time(lambda: self.sql_client.count_books_by_publisher()))
         times[2].append(count_time(lambda: self.sql_client.count_words_in_titles()))
-        times[2].append(0)
-        print(times[2])
-        # times[2].append(count_time(lambda: self.sql_client.))
+        times[2].append(count_time(lambda: self.sql_client.count_median_for_books_by_publisher()))
 
         return times
 
     def generate_stats(self):
-        queries = ['Query 1', 'Query 2', 'Query 3', 'Query 4', 'Query 5']
+        queries = ['Query 1', 'Query 2', 'Query 3', 'Query 4', 'Query 5', 'Query 6']
         data_bases = ['MongoDB', 'Redis', 'SQL']
         times = self.get_times_for_stats()
 
@@ -246,7 +240,7 @@ class Gui:
 
         width = 0.2
         offset = 0.2
-        bottom_margin = 0.40
+        bottom_margin = 0.50
 
         plt.subplots_adjust(bottom=bottom_margin)
 
@@ -270,6 +264,7 @@ class Gui:
         plt.text(0, -0.50, 'Query 3: Count books by publisher', transform=plt.gca().transAxes, ha='left', fontsize=10)
         plt.text(0, -0.60, 'Query 4: Count words in titles', transform=plt.gca().transAxes, ha='left', fontsize=10)
         plt.text(0, -0.70, 'Query 5: Count avg publisher books', transform=plt.gca().transAxes, ha='left', fontsize=10)
+        plt.text(0, -0.80, 'Query 6: Count median for books count by publisher', transform=plt.gca().transAxes, ha='left', fontsize=10)
 
         plt.show()
 
