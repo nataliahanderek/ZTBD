@@ -199,7 +199,7 @@ class Gui:
         self.table.insert("", "end", text="SQL", values=(time_sql), tags=("oddrow",))
 
     def get_times_for_stats(self):
-        times = [[50, 20,15,32,11], [52, 21,50, 20,15], [50, 20,15,33, 21]]
+        times = [[], [], []]
 
         # times[0].append(count_time(lambda: self.mongo_client.select('London, Julia')))
         # times[0].append(count_time(lambda: self.mongo_client.select_all()))
