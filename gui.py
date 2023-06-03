@@ -136,6 +136,8 @@ class Gui:
         self.table = ttk.Treeview(self.root, columns=("Time"), style="Custom.Treeview")
         self.table.heading("#0", text="Database")
         self.table.heading("Time", text="Time (ms)")
+        self.table.column("Time", width=150)
+        self.table.column("#0", width=150)
         self.table.configure(height=3)
         self.table.tag_configure("oddrow", background="#E8E8E8")
         self.table.tag_configure("evenrow", background="white")
@@ -152,9 +154,6 @@ class Gui:
                                                 command=lambda: self.generate_stats())
         self.generate_stats_button.configure(width=50)
         self.generate_stats_button.pack()
-
-    def save_config(self):
-        self.clean_gui()
 
     def update_strategy(self, year):
         # modyfikujemy wszystkie rekordy które były w roku: data (String)
@@ -189,7 +188,10 @@ class Gui:
         self.create_table(self.time_select_mongo, self.time_select_redis, self.time_select_sql)
 
     def clean_gui(self):
-        self.spacer.pack_forget()
+        self.redis_client.close_redis()
+        self.mongo_client.close_mongo()
+        self.sql_client.close_sql()
+        print('Clients was closed!')
 
     def create_table(self, time_mongo, time_redis, time_sql):
         self.table.delete(*self.table.get_children())
@@ -201,22 +203,28 @@ class Gui:
     def get_times_for_stats(self):
         times = [[], [], []]
 
-        # times[0].append(count_time(lambda: self.mongo_client.select('London, Julia')))
-        # times[0].append(count_time(lambda: self.mongo_client.select_all()))
-        # times[0].append(count_time(lambda: self.mongo_client.))
-        # times[0].append(count_time(lambda: self.mongo_client.))
+        times[0].append(count_time(lambda: self.mongo_client.select_all()))
+        times[0].append(count_time(lambda: self.mongo_client.select_authors()))
+        times[0].append(count_time(lambda: self.mongo_client.count_books_by_publisher()))
+        times[0].append(count_time(lambda: self.mongo_client.count_words_in_titles()))
+        print(times[0])
+        times[0].append(0)
         # times[0].append(count_time(lambda: self.mongo_client.))
 
-        # times[1].append(count_time(lambda: self.redis_client.select('London, Julia')))
-        # times[1].append(count_time(lambda: self.redis_client.select_all()))
-        # times[1].append(count_time(lambda: self.redis_client.))
-        # times[1].append(count_time(lambda: self.redis_client.))
+        times[1].append(count_time(lambda: self.redis_client.select_all()))
+        times[1].append(count_time(lambda: self.redis_client.select_authors()))
+        times[1].append(count_time(lambda: self.redis_client.count_books_by_publisher_redis()))
+        times[1].append(count_time(lambda: self.redis_client.count_words_in_titles()))
+        print(times[1])
+        times[1].append(0)
         # times[1].append(count_time(lambda: self.redis_client.))
 
-        # times[2].append(count_time(lambda: self.sql_client.select('London, Julia')))
-        # times[2].append(count_time(lambda: self.sql_client.select_all()))
-        # times[2].append(count_time(lambda: self.sql_client.))
-        # times[2].append(count_time(lambda: self.sql_client.))
+        times[2].append(count_time(lambda: self.sql_client.select_all()))
+        times[2].append(count_time(lambda: self.sql_client.select_authors()))
+        times[2].append(count_time(lambda: self.sql_client.count_books_by_publisher()))
+        times[2].append(count_time(lambda: self.sql_client.count_words_in_titles()))
+        times[2].append(0)
+        print(times[2])
         # times[2].append(count_time(lambda: self.sql_client.))
 
         return times
@@ -265,6 +273,11 @@ class Gui:
 
         plt.show()
 
+    def close_window(self):
+        self.clean_gui()
+        self.root.destroy()
+
 
 gui = Gui()
+gui.root.protocol("WM_DELETE_WINDOW", gui.close_window)
 gui.root.mainloop()

@@ -9,21 +9,23 @@ def count_time(function):
     function()
     end_time = datetime.now()
 
-    time = end_time - start_time
-    return time
+    time_delta = end_time - start_time
+    execution_time = time_delta.total_seconds()
+    return execution_time
 
 
 if __name__ == '__main__':
-    # mongo_client = Mongo()
+    mongo_client = Mongo()
     # mongo_client.create_mongo()
 
     redis_client = Redis()
+    # redis_client.clear()
     # redis_client.create_redis()
 
-    # sql_client = MySql()
+    sql_client = MySql()
     # sql_client.create_single_tables()
     # sql_client.create_connection_table()
-    print(redis_client.count_words_in_titles())
+    # print(redis_client.count_words_in_titles())
     ### MONGO ###
 
     # time_select_mongo = count_time(lambda: mongo_client.select('London, Julia'))
@@ -43,7 +45,7 @@ if __name__ == '__main__':
 
     ### REDIS ###
 
-    # redis_client.clear_redis()
+    # redis_client.clear()
 
     # time_select_redis = count_time(lambda: redis_client.select('London, Julia'))
     # print("Time for REDIS: select:", time_select_redis)
