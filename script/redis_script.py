@@ -13,8 +13,11 @@ class Redis:
     def create_redis(self):
         with open(CSV_URL, 'r', encoding='utf-8') as csvfile:
             csvreader = csv.DictReader(csvfile)
+            record_counter = 0
 
             for i, row in enumerate(csvreader, 1):
+                if i > 1000000:  # Warunek dla pobrania tylko pierwszego miliona rekordów
+                    break
                 book_id = f'book:{i}'
                 title = row['Title']
                 author = row['Author']
@@ -35,6 +38,7 @@ class Redis:
 
                 # Dodawanie danych do bazy Redis
                 self.r.hset(book_id, mapping=data)
+                record_counter += 1
 
         print("Dane z pliku CSV zostały dodane do bazy Redis.")
 
@@ -151,6 +155,7 @@ class Redis:
 
         publishers = len(publishers)
         total_books = self.r.dbsize()
+        print(total_books)
 
         if publishers > 0:
             average = total_books / publishers

@@ -201,30 +201,38 @@ class Gui:
         self.table.insert("", "end", text="SQL", values=(time_sql), tags=("oddrow",))
 
     def get_times_for_stats(self):
-        times = [[], [], []]
+        times = []
+        times_mongo = [count_time(lambda: self.mongo_client.select_all()),
+                       count_time(lambda: self.mongo_client.select_authors()),
+                       count_time(lambda: self.mongo_client.count_books_by_publisher()),
+                       count_time(lambda: self.mongo_client.count_words_in_titles()),
+                       count_time(lambda: self.mongo_client.count_avg_publisher_books()),
+                       count_time(lambda: self.mongo_client.count_median_for_books_by_publisher())]
 
-        times[0].append(count_time(lambda: self.mongo_client.select_all()))
-        times[0].append(count_time(lambda: self.mongo_client.select_authors()))
-        times[0].append(count_time(lambda: self.mongo_client.count_books_by_publisher()))
-        times[0].append(count_time(lambda: self.mongo_client.count_words_in_titles()))
-        times[0].append(count_time(lambda: self.mongo_client.count_avg_publisher_books()))
-        times[0].append(count_time(lambda: self.mongo_client.count_median_for_books_by_publisher()))
+        times.append(times_mongo)
+        print(times_mongo)
 
-        times[1].append(count_time(lambda: self.redis_client.select_all()))
-        times[1].append(count_time(lambda: self.redis_client.select_authors()))
-        times[1].append(count_time(lambda: self.redis_client.count_books_by_publisher_redis()))
-        times[1].append(count_time(lambda: self.redis_client.count_words_in_titles()))
-        times[1].append(count_time(lambda: self.redis_client.count_avg_publisher_books()))
-        times[1].append(count_time(lambda: self.redis_client.count_median_for_books_by_publisher()))
+        times_redis = [count_time(lambda: self.redis_client.select_all()),
+                       count_time(lambda: self.redis_client.select_authors()),
+                       count_time(lambda: self.redis_client.count_books_by_publisher_redis()),
+                       count_time(lambda: self.redis_client.count_words_in_titles()),
+                       count_time(lambda: self.redis_client.count_avg_publisher_books()),
+                       count_time(lambda: self.redis_client.count_median_for_books_by_publisher())]
 
-        times[2].append(count_time(lambda: self.sql_client.select_all()))
-        times[2].append(count_time(lambda: self.sql_client.select_authors()))
-        times[2].append(count_time(lambda: self.sql_client.count_books_by_publisher()))
-        times[2].append(count_time(lambda: self.sql_client.count_words_in_titles()))
-        times[2].append(count_time(lambda: self.sql_client.count_avg_publisher_books()))
-        times[2].append(count_time(lambda: self.sql_client.count_median_for_books_by_publisher()))
+        times.append(times_redis)
+        print(times_redis)
 
-        return times
+        times_mysql = [count_time(lambda: self.sql_client.select_all()),
+                       count_time(lambda: self.sql_client.select_authors()),
+                       count_time(lambda: self.sql_client.count_books_by_publisher()),
+                       count_time(lambda: self.sql_client.count_words_in_titles()),
+                       count_time(lambda: self.sql_client.count_avg_publisher_books()),
+                       count_time(lambda: self.sql_client.count_median_for_books_by_publisher())]
+
+        times.append(times_mysql)
+        print(times_mysql)
+        with open("./data/times.txt", "a") as file:
+            file.write(str(times) + "\n")
 
     def generate_stats(self):
         queries = ['Query 1', 'Query 2', 'Query 3', 'Query 4', 'Query 5', 'Query 6']
@@ -267,7 +275,8 @@ class Gui:
         plt.text(0, -0.50, 'Query 3: Count books by publisher', transform=plt.gca().transAxes, ha='left', fontsize=10)
         plt.text(0, -0.60, 'Query 4: Count words in titles', transform=plt.gca().transAxes, ha='left', fontsize=10)
         plt.text(0, -0.70, 'Query 5: Count avg publisher books', transform=plt.gca().transAxes, ha='left', fontsize=10)
-        plt.text(0, -0.80, 'Query 6: Count median for books count by publisher', transform=plt.gca().transAxes, ha='left', fontsize=10)
+        plt.text(0, -0.80, 'Query 6: Count median for books count by publisher', transform=plt.gca().transAxes,
+                 ha='left', fontsize=10)
 
         plt.show()
 

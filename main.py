@@ -17,6 +17,7 @@ def count_time(function):
 if __name__ == '__main__':
     # mongo_client = Mongo()
     # mongo_client.create_mongo()
+    # mongo_client.close_mongo()
 
     # redis_client = Redis()
     # redis_client.create_redis()
