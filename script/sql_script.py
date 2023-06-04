@@ -110,12 +110,7 @@ class MySql:
 
             session.commit()
 
-            counter = 0
-
             for data_chunk in data_iter:
-
-                if counter > 1000000:
-                    break
 
                 # drop NA rows and rename the columns for convenience
                 data = data_chunk.dropna()
@@ -164,9 +159,6 @@ class MySql:
 
                 # empty the dump_table and repeat for the next data chunk
                 session.execute(dump_table.delete())
-
-                counter += len(data_chunk)
-                print(counter)
 
                 session.commit()
 

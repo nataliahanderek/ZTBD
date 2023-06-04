@@ -237,11 +237,14 @@ class Gui:
     def generate_stats(self):
         queries = ['Query 1', 'Query 2', 'Query 3', 'Query 4', 'Query 5', 'Query 6']
         data_bases = ['MongoDB', 'Redis', 'SQL']
-        times = self.get_times_for_stats()
+        # times = self.get_times_for_stats()
 
         mongo_color = '#9EE493'
         mysql_color = (0.584, 0.745, 0.812)
         redis_color = '#F39B93'
+
+        with open('data/times.txt', 'r') as file:
+            times = eval(file.read())
 
         mongo_values = times[0]
         redis_values = times[1]
