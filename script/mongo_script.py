@@ -13,7 +13,8 @@ class Mongo:
         self.columns_to_tables = ["Title", "Author", "PublicationYear", "Publisher", "ItemType", "ItemCollection"]
 
     def create_mongo(self):
-        data_iter = pnd.read_csv(CSV_URL, usecols=self.columns_to_tables, iterator=True)
+        data_iter = pnd.read_csv(CSV_URL, usecols=self.columns_to_tables, iterator=True, chunksize=10000)
+        counter = 0
 
         for data_chunk in data_iter:
             # drop rows with any NA values
@@ -21,6 +22,12 @@ class Mongo:
             data["Title"] = data["Title"].apply(lambda row: row.rsplit(';')[0])
 
             self.collection.insert_many(data.to_dict('records'), ordered=False, bypass_document_validation=True)
+
+            counter += 10000
+
+            if counter >= 13680000:
+                print("13 mln books inserted successfully!")
+                break
 
         # Confirm the successful insertion
         print("Book inserted successfully!")

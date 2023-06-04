@@ -262,8 +262,9 @@ class MySql:
 
         self.cursor.execute(
             " SELECT "
-            " SUM((LENGTH(TITLE) - LENGTH(REPLACE(TITLE, %s, ''))) / LENGTH(%s)) AS COUNT_WORD "
-            " FROM TITLES",
+            " SUM((LENGTH(T.TITLE) - LENGTH(REPLACE(T.TITLE, %s, ''))) / LENGTH(%s)) AS COUNT_WORD "
+            " FROM BOOKS_INFO B"
+            " LEFT JOIN TITLES T ON T.ID = B.TITLE_ID",
             (search_word, search_word,)
         )
         row = self.cursor.fetchone()

@@ -15,16 +15,16 @@ def count_time(function):
 
 
 if __name__ == '__main__':
-    mongo_client = Mongo()
+    # mongo_client = Mongo()
     # mongo_client.create_mongo()
 
-    redis_client = Redis()
+    # redis_client = Redis()
     # redis_client.create_redis()
 
     sql_client = MySql()
     # sql_client.create_single_tables()
-    # sql_client.create_connection_table()
-    print(mongo_client.count_median_for_books_by_publisher())
+    sql_client.create_connection_table()
+
     ### MONGO ###
 
     # time_select_mongo = count_time(lambda: mongo_client.select('London, Julia'))
